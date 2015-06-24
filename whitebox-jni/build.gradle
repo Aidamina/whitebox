@@ -1,4 +1,84 @@
-apply plugin: 'java'
+
 apply plugin: 'cpp'
+apply plugin: 'java'
 
 sourceCompatibility = 1.7
+
+model {
+    buildTypes {
+        debug
+        release
+    }
+     platforms {
+        x86 {
+            architecture "x86"
+        }
+        x64 {
+            architecture "x86_64"
+        }
+        itanium {
+            architecture "ia-64"
+        }
+    }
+	
+    flavors {
+		/*
+        community
+		*/
+        enterprise
+		
+    }
+	
+	components  {
+		main(NativeLibrarySpec) {
+		baseName "whitebox-jni"
+			targetPlatform "x86"
+            targetPlatform "x64"
+			sources {
+				cpp {
+					source 
+				
+				
+				}
+			}
+		}
+		all {
+			binaries.all {
+				 if (targetPlatform.operatingSystem.macOsX) {
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/darwin"
+					linker.args '-mmacosx-version-min=10.4'
+				} else if (targetPlatform.operatingSystem.linux) {
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/linux"
+				} else if (targetPlatform.operatingSystem.windows) {
+					cppCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+					cppCompiler.args "-I${org.gradle.internal.jvm.Jvm.current().javaHome}/include/win32"
+					linker.args "Shlwapi.lib", "Advapi32.lib"
+				} else if (targetPlatform.operatingSystem.freeBSD) {
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/freebsd"
+				}
+			}
+		}
+
+	}
+}
+
+/*
+libraries {
+    main {
+        binaries.all {
+            if (flavor == flavors.enterprise) {
+                cppCompiler.define "ENTERPRISE"
+            }
+			cppCompiler.define "BUILDING_DLL"
+			cppCompiler.define "_HAS_EXCEPTIONS=0" // to disable warning: http://stackoverflow.com/questions/552695/how-can-i-switch-off-exception-handling-in-msvc
+        }
+		binaries.withType(SharedLibraryBinarySpec) {
+			cppCompiler.define "STATIC"
+		}
+
+    }
+}
+*/

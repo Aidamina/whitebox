@@ -1,0 +1,14 @@
+apply plugin: 'application'
+
+mainClassName = "org.aidamina.whitebox.WhiteboxMain"
+
+sourceCompatibility = 1.7
+
+dependencies {
+	compile project(':whitebox-jni')
+	
+}
+
+run {
+    systemProperty 'java.library.path', file( '../whitebox-jni/build/binaries/mainSharedLibrary/x64Debug' )
+}

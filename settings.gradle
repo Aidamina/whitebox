@@ -1,1 +1,2 @@
 include 'whitebox-jni'
+include 'whitebox-desktop'
